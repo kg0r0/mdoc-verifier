@@ -296,9 +296,11 @@ func (v *Verifier) verifyIssuerCertificate(issuerSigned IssuerSigned, mso *Mobil
 	}
 
 	opts := x509.VerifyOptions{
-		Roots:       v.roots,
-		KeyUsages:   []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
-		CurrentTime: v.certCurrentTime,
+		Roots:     v.roots,
+		KeyUsages: []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
+		// The Wallet app provided by Google returns the following values, so it temporarily bypasses the validity period verification.
+		// e.g.) Issuer:CN=Google TEST IACA mDL,ST=US-MA,C=US Subject:CN=Google TEST DS mDL,ST=US-MA,C=US NotBefore:2023-07-26 00:00:01 +0000 UTC NotAfter:2024-10-25 00:00:01 +0000 UTC
+		CurrentTime: time.Unix(1727708400, 0), // Mon Sep 30 2024 15:00:00 GMT+0000
 	}
 
 	certificate := certs[0] // End entity certificate
