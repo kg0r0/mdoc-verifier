@@ -235,7 +235,7 @@ async function getIdentity() {
   try {
     const requestPayload = {
       type: "digital_credentials_api",
-      protocol: "preview",
+      protocol: "org-iso-mdoc",
       attributes: selectedAttributes
     };
 
@@ -262,16 +262,19 @@ async function getIdentity() {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    // https://wicg.github.io/digital-credentials/
     const response = await navigator.credentials.get({
+        mediation: "required",
         digital: {
-          providers: [
+          requests: [
             {
-              protocol: "preview",
-              request: req.data,
+              protocol: "org-iso-mdoc",
+              data: req.data,
             }
           ]
         },
+    }).catch(function(err) {
+      console.error(err);
+      return null;
     });
 
     console.log(response);
